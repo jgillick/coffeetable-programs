@@ -1,7 +1,16 @@
+"""
+Tests the curve animations using matplotlib to visualize the curves on a 2-dimentional x/y chart.
+
+# Setup
+pip3 install matplotlib
+
+# Usage
+python3 ./Test.py
+
+"""
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.widgets import Button
-import numpy as np
 from time import sleep
 
 from shapes.Curve import Curve
@@ -17,10 +26,6 @@ running = False
 run_next = False
 pause_btn = None
 next_btn = None
-
-def millis():
-    global milliseconds
-    return milliseconds
 
 def toggle_pause(event):
     global running
@@ -68,10 +73,9 @@ def main():
 
     # Create curves
     curves.append(Curve(LED_NUM, RED, milliseconds))
-    sleep(.5)
     curves.append(Curve(LED_NUM, GREEN, milliseconds))
-    sleep(.1)
     curves.append(Curve(LED_NUM, BLUE, milliseconds))
+    curves.append(Curve(LED_NUM, GREEN, milliseconds))
 
     # Setup plots
     fig, ax = plt.subplots()

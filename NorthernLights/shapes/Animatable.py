@@ -144,7 +144,7 @@ class LivingAnimation(Animatable):
         if not self.is_animating:
             self.create_target_values()
             self.change(self.target, self.duration)
-            print(f"New: {self}")
+            # print(f"New: {self}")
 
         return True
 
