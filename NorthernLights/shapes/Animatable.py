@@ -127,7 +127,7 @@ class LivingAnimation(Animatable):
                 if neg == 1:
                     relative *= -1
 
-            # Set relative target within min/max values
+            # Keep relative target within min/max values
             target = self.current + relative
             if target < self.value_range['min']:
                 target = self.value_range['min']

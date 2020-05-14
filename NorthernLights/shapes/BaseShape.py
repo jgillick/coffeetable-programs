@@ -1,10 +1,12 @@
 import time
 
-# Color indexes
-RED = 0
-GREEN = 1
-BLUE = 2
-
+# Colors
+RED =    (1,0,0)
+YELLOW = (1,1,0)
+GREEN =  (0,1,0)
+CYAN =   (0,1,1)
+BLUE =   (0,0,1)
+PURPLE = (1,0,1)
 
 class BaseShape:
     # A list of instance attribute names, which are animatable objects
@@ -28,6 +30,7 @@ class BaseShape:
     def update(self, now):
         """ Updates the shape animatable attributes."""
         elapsed = now - self.last_update
+        print(elapsed)
         is_animating = False
         for anin_attr in self.animatable_attrs:
             anim = getattr(self, anin_attr)

@@ -15,6 +15,8 @@ MAX_WIDTH_SPEED = 10000
 MIN_VERT_SPEED = 1000
 MAX_VERT_SPEED = 10000
 
+PI_2 = 6.28  # radians for a full circle
+
 class Curve(BaseShape):
     """A basic sinewave curve."""
     animatable_attrs = ["width", "horizontal", "amplitude"]
@@ -51,7 +53,6 @@ class Curve(BaseShape):
         self._define_width()
         self._define_horizontal()
         self._cache_values()
-        print("New Curve")
         print(self)
 
 
@@ -114,29 +115,22 @@ class Curve(BaseShape):
             # Moving right
             if center < self.horizontal.target:
                 center += 1
+            # Moving left
             else:
                 center -= 1
 
-        pi2 = 6.28  # radians for a full circle
-        self.pi_inc = pi2 / width
+        self.pi_inc = PI_2 / width
         self.first_led = round(center - (width / 2))
         self.last_led = self.first_led + width
 
         # Start at the bottom of the curve, to provide a smooth fade up
         self.start_x = (width * -1.25) * self.pi_inc
 
-
     def __getitem__(self, idx):
         """Get an LED RGB tuple by index."""
 
         # Index out of range
-        if (
-            idx < 0
-            or idx >= self.led_count
-            or idx < self.first_led
-            or idx > self.last_led
-            or self.first_led == self.last_led
-        ):
+        if (idx < self.first_led or idx > self.last_led):
             return (0, 0, 0)
 
         colors = [0, 0, 0]
@@ -154,7 +148,9 @@ class Curve(BaseShape):
             brightness = 255
 
         # Assign to color
-        colors[self.color] = brightness
+        colors[0] = brightness if self.color[0] else 0
+        colors[1] = brightness if self.color[1] else 0
+        colors[2] = brightness if self.color[2] else 0
         return tuple(colors)
 
 
