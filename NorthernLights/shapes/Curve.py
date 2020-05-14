@@ -1,10 +1,10 @@
 from .BaseShape import BaseShape
 from .Animatable import Animatable, LivingAnimation
 from random import randint
-from math import pi, fabs, sin
+from math import fabs, sin
 
 MIN_WIDTH = 5
-MAX_BRIGHTNESS = 255
+MAX_AMPLITUDE = 127 # Brightness will be 2x curve amplitude
 
 MIN_HORZ_SPEED = 1000
 MAX_HORZ_SPEED = 10000
@@ -70,7 +70,7 @@ class Curve(BaseShape):
         self.amplitude = LivingAnimation(
             label="Amplitude",
             initial_value=0,
-            value_range={'min': 0, 'max': MAX_BRIGHTNESS},
+            value_range={'min': 0, 'max': MAX_AMPLITUDE},
             duration_range={'min': MIN_VERT_SPEED, 'max': MAX_VERT_SPEED}
         )
 
@@ -97,7 +97,7 @@ class Curve(BaseShape):
         self.horizontal = LivingAnimation(
             label="Horizontal",
             initial_value=randint(0, self.led_count),
-            relative_range={'min': 0, 'max': self.led_count / 4},
+            relative_range={'min': 0, 'max': self.led_count / 2},
             value_range={'min': 0, 'max': self.led_count},
             duration_range={'min': MIN_HORZ_SPEED, 'max': MAX_HORZ_SPEED}
         )
@@ -106,24 +106,24 @@ class Curve(BaseShape):
     def _cache_values(self):
         """Calculate values that will be used to generate LED colors later."""
         width = self.width.current
-        self.pi_inc = pi / width
+        center = self.horizontal.current
 
-        # Add extra LED to both sides and adjust for fractional LED indexes
-        width += 2
-        center = self.horizontal.current + 1
-        start = center - (width / 2)
-        start_led = round(start)
-        self.first_led = start_led
+        # If center would need to be rounded, increase the width by 1 to make a smoother fade between LEDs.
+        if center % 2 != 0:
+            width += 1
+            # Moving right
+            if center < self.horizontal.target:
+                center += 1
+            else:
+                center -= 1
+
+        pi2 = 6.28  # radians for a full circle
+        self.pi_inc = pi2 / width
+        self.first_led = round(center - (width / 2))
         self.last_led = self.first_led + width
 
-        # If the starting LED was rounded, adjust the starting x value used for Math.sin accordintly
-        # This makes a smoother transition to fade between LEDs as the curve moves.
-        # For example, if start_led was .6, it will be rounded to 1. In that case, we'd want the previous LED to be
-        # 40% of the first value (pi_inc * 1 - 0.6)
-        if start != start_led:
-            self.start_x = self.pi_inc * fabs(start - start_led)
-        else:
-            self.start_x = 0
+        # Start at the bottom of the curve, to provide a smooth fade up
+        self.start_x = (width * -1.25) * self.pi_inc
 
 
     def __getitem__(self, idx):
@@ -145,7 +145,7 @@ class Curve(BaseShape):
         curve_idx = idx - self.first_led
         curve_x = self.start_x + (self.pi_inc * curve_idx)
         amplitude = self.amplitude.current
-        brightness = round(amplitude * sin(curve_x))
+        brightness = round((amplitude * sin(curve_x)) + amplitude)
 
         # Adjust for min/max values
         if brightness < 0:

@@ -24,9 +24,9 @@ def millis():
 
 def main():
     curves = [
-        # Curve(LED_NUM, RED, millis()),
+        Curve(LED_NUM, RED, millis()),
         Curve(LED_NUM, GREEN, millis()),
-        # Curve(LED_NUM, BLUE, millis()),
+        Curve(LED_NUM, BLUE, millis()),
     ]
 
     while True:
@@ -50,8 +50,6 @@ def main():
             pixels[i] = (r,g,b)
         pixels.show()
 
-        # print("---------------------")
-        # print(pixels)
 
         # Sleep for 1ms
-        time.sleep(0.5)
+        time.sleep(0.1)

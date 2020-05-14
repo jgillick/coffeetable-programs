@@ -18,7 +18,7 @@ from shapes.BaseShape import RED, BLUE, GREEN
 
 LED_NUM = 150
 COLORS = ['red', 'green', 'blue']
-SPEED = 100
+SPEED = 50
 
 curves = []
 milliseconds = 0
