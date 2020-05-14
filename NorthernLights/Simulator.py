@@ -5,7 +5,7 @@ Tests the curve animations using matplotlib to visualize the curves on a 2-dimen
 pip3 install matplotlib
 
 # Usage
-python3 ./Test.py
+python3 ./Simulator.py
 
 """
 import matplotlib.pyplot as plt

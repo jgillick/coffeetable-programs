@@ -50,11 +50,11 @@ def main():
     ]
 
     while True:
-        pixels.fill((MIN_BRIGHTNESS, MIN_BRIGHTNESS, MIN_BRIGHTNESS))
+        now = millis()
 
         # Update curve animation
         for curve in curves:
-            curve.update(millis())
+            curve.update(now)
 
         # Set LED colors
         for i in range(LED_NUM):
@@ -67,7 +67,7 @@ def main():
                 g = max(g, cg)
                 b = max(b, cb)
 
-            # Set color, with gamma correction
+            # Set color with gamma correction
             pixels[i] = (
                 gamma[r],
                 gamma[g],
@@ -75,9 +75,6 @@ def main():
             )
 
         pixels.show()
-
-
-        # Sleep for 1ms
         time.sleep(0.001)
 
 main()
